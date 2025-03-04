@@ -1,0 +1,109 @@
+@Metadata.layer: #CORE
+@UI: {headerInfo: { typeName: 'EDI850 LOG', typeNamePlural: 'Purchase Order', title: { type: #STANDARD ,label: 'Purchase Order', value: 'POid' }}}
+annotate view ZC_EDI850OG
+    with 
+{
+@UI.facet: [
+  {
+            id: 'POID',
+            purpose: #HEADER,
+            type: #DATAPOINT_REFERENCE,
+            position: 10,
+            targetQualifier: 'SysPOID'
+          },
+                      {
+                        label: 'General Information',
+                        id: 'GeneralInfo',
+                        type: #COLLECTION,
+                        position: 10
+                     },
+                     {
+                        id: 'PO',
+                        purpose:#STANDARD,
+                        type: #IDENTIFICATION_REFERENCE,
+                        label: 'PO Info',
+                        position: 10,
+                        parentId: 'GeneralInfo'
+                     },
+                     {
+            id: 'AdminSection',
+            purpose:#STANDARD,
+            type: #FIELDGROUP_REFERENCE,
+            label: 'Admin Info',
+            position: 20,
+            parentId: 'GeneralInfo',
+            targetQualifier: 'AdminSection'
+           }]
+
+  @EndUserText.label: 'Purchase Order ID'
+  @UI.identification: [{ position: 10 }]
+  @UI.fieldGroup: [{ qualifier: 'POInfo', position: 10 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 10}]
+  @UI.selectionField: [{ position: 10 }
+  ]
+  @UI.dataPoint: { qualifier: 'SysPOID', title: 'PO ID'}
+  
+    PoId;
+    
+  @EndUserText.label: 'EDI Status'
+  @UI.identification: [{ position: 20 }]
+  @UI.fieldGroup: [{ qualifier: 'POInfo', position: 20 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 20}]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_ONLY 
+  @UI.dataPoint: { qualifier: 'SysPOName', title: 'EDIStatus'}
+@Consumption.valueHelpDefinition:
+[{ entity: { name : 'ZI_DOMAIN_FIX_VALUE' , element: 'description' } ,
+ additionalBinding: [{ element: 'domain_name',
+                             localConstant: 'Z_EDISTATUSDATAELEMENT', usage: #FILTER }]
+                             , distinctValues: true } ]
+      //@UI.lineItem: [{ position: 20, criticality: 'OverallStatusCriticality' }]
+    //@UI.dataPoint: { qualifier: 'SysPOName', title: 'EDIStatus',criticality: 'OverallStatusCriticality'}
+    //@Consumption.valueHelpDefinition: [{ entity : {name: 'ZEDI_STATUS', element: 'description'} }] 
+   
+
+                             
+                
+         
+    Edi850Status;
+    
+    @EndUserText.label: 'Status'
+    @UI.textArrangement: #TEXT_ONLY
+    @Search.defaultSearchElement: true
+    @UI.selectionField: [{ position: 60 }] 
+    @UI.identification: [{ position: 60 }]
+    @UI.fieldGroup: [{ qualifier: 'AdditionalInfoGroup', position: 60 }]
+    @UI.lineItem: [{ position:60, criticality: 'OverallStatusCriticality' }]
+    @UI.dataPoint: { qualifier: 'SysPOName', title: 'SysEDIStatus',criticality: 'OverallStatusCriticality'}
+    @Consumption.valueHelpDefinition: [{ entity : {name: 'ZEDI_STATUS', element: 'Statusdescription'} }]
+    
+    StatusDesc;
+    
+  @EndUserText.label: 'Created By'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 10 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 30}]
+  //@UI.selectionField: [{ position: 30 }]
+  LocalCreatedBy;
+
+  @EndUserText.label: 'Created At'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 20 }]
+  @Search.defaultSearchElement: true
+   @UI.lineItem: [{ position: 40}]
+  LocalCreatedAt;
+
+  @EndUserText.label: 'Last Changed By'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 30 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 40}]
+  LocalLastChangedBy;
+
+  @EndUserText.label: 'Last Changed At'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 40 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 50}]
+  LastChangedAt;
+    
+}

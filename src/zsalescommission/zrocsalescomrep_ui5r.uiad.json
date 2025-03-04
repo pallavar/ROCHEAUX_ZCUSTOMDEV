@@ -1,0 +1,34 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Rocheux",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "salescomm"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_AF03A6A5D9A1971D6D539FF7666C452846F4B576_TM",
+    "semanticObject": "semsalescom1",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_AF03A6A5D9A1971D6D539FF7666C452846F4B576_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Rocheux",
+        "subtitle": "Sales Commission"
+      }
+    }
+  ]
+}

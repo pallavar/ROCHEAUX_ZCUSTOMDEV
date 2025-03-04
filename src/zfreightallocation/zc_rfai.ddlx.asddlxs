@@ -1,0 +1,185 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.typeName: 'Projection CDS View for ZR_RFAI'
+@UI.headerInfo.typeNamePlural: 'Projection CDS View for ZR_RFAI'
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'ItemUuid'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'ItemUuid'
+annotate view ZC_RFAI with
+{
+  @EndUserText.label: 'ItemUuid'
+  @UI.facet: [ {
+    label: 'General Information', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+
+  
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'FaId'
+  } ]
+  @UI.lineItem: [ {
+    position: 20 , 
+    label: 'FaId'
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  FaId;
+  
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Purchase Order'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Purchase Order'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  OrderPo;
+  
+  @EndUserText.label: 'ItemId'
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'Purchase Order Item ID'
+  } ]
+  @UI.lineItem: [ {
+    position: 40 , 
+    label: 'Purchase Order Item ID'
+  } ]
+  @UI.selectionField: [ {
+    position: 40 
+  } ]
+  ItemId;
+  
+  @EndUserText.label: 'Order Quantity'
+  @UI.identification: [ {
+    position: 50 , 
+    label: 'Order Quantity'
+  } ]
+  @UI.lineItem: [ {
+    position: 50 , 
+    label: 'Order Quantity'
+  } ]
+  @UI.selectionField: [ {
+    position: 50 
+  } ]
+  OrdQty;
+  
+  @EndUserText.label: 'PoUnitPrice'
+  @UI.identification: [ {
+    position: 60 , 
+    label: 'Unit Price'
+  } ]
+  @UI.lineItem: [ {
+    position: 60 , 
+    label: 'Unit Price'
+  } ]
+  @UI.selectionField: [ {
+    position: 60 
+  } ]
+  PoUnitPrice;
+  
+  @EndUserText.label: 'Received Quantity'
+  @UI.identification: [ {
+    position: 70 , 
+    label: 'Received Quantity'
+  } ]
+  @UI.lineItem: [ {
+    position: 70 , 
+    label: 'Received Quantity'
+  } ]
+  @UI.selectionField: [ {
+    position: 70 
+  } ]
+  RcvdQty;
+  
+  @EndUserText.label: 'Received Amount'
+  @UI.identification: [ {
+    position: 80 , 
+    label: 'Received Amount'
+  } ]
+  @UI.lineItem: [ {
+    position: 80 , 
+    label: 'Received Amount'
+  } ]
+  @UI.selectionField: [ {
+    position: 80 
+  } ]
+  RcvdAmount;
+  
+  @EndUserText.label: 'Allowed Quantity'
+  @UI.identification: [ {
+    position: 90 , 
+    label: 'Allowed Quantity'
+  } ]
+  @UI.lineItem: [ {
+    position: 90 , 
+    label: 'Allowed Quantity'
+  } ]
+  @UI.selectionField: [ {
+    position: 90 
+  } ]
+  AllowedQuantity;
+  
+  @EndUserText.label: 'Allocated Fraction'
+  @UI.identification: [ {
+    position: 100 , 
+    label: 'Allocated Fraction'
+  } ]
+  @UI.lineItem: [ {
+    position: 100 , 
+    label: 'Allocated Fraction'
+  } ]
+  @UI.selectionField: [ {
+    position: 100 
+  } ]
+  AllocFrt;
+  
+  @EndUserText.label: 'Freight Value'
+  @UI.identification: [ {
+    position: 110 , 
+    label: 'Freight Value'
+  } ]
+  @UI.lineItem: [ {
+    position: 110 , 
+    label: 'Freight Value'
+  } ]
+  @UI.selectionField: [ {
+    position: 110 
+  } ]
+  FrtValue;
+  
+  @EndUserText.label: 'Condition Value'
+  @UI.identification: [ {
+    position: 120 , 
+    label: 'Condition Value'
+  } ]
+  @UI.lineItem: [ {
+    position: 120 , 
+    label: 'Condition Value'
+  } ]
+  @UI.selectionField: [ {
+    position: 120 
+  } ]
+  ConValue;
+  
+  @EndUserText.label: 'Last Changed At'
+  @UI.identification: [ {
+    position: 130 , 
+    label: 'Last Changed At'
+  } ]
+  @UI.lineItem: [ {
+    position: 130 , 
+    label: 'Last Changed At'
+  } ]
+  @UI.selectionField: [ {
+    position: 130 
+  } ]
+  LocalLastChangedAt;
+}

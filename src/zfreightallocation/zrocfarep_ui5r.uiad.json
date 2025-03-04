@@ -1,0 +1,33 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Rocheux Freight Allocation",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "zfreightallocationv2"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_80480BBD9894F7D896517CD1084788D3284A44CE_TM",
+    "semanticObject": "fa",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_80480BBD9894F7D896517CD1084788D3284A44CE_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Rocheux Freight Allocation"
+      }
+    }
+  ]
+}

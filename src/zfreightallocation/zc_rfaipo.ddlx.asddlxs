@@ -1,0 +1,74 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.typeName: 'Projection CDS View for ZR_RFAIPO'
+@UI.headerInfo.typeNamePlural: 'Projection CDS View for ZR_RFAIPO'
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'FaId'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'PoId'
+
+annotate view ZC_RFAIPO
+    with 
+{
+    @EndUserText.label: 'ItemUuid'
+  @UI.facet: [ {
+    label: 'General Information', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+  @UI.identification: [ {
+    position: 10 , 
+    label: 'ItemUuid'
+  } ]
+  @UI.lineItem: [ {
+    position: 10 , 
+    label: 'ItemUuid'
+  } ]
+  @UI.selectionField: [ {
+    position: 10 
+  } ]
+  ItemUuid;
+  
+    @EndUserText.label: 'FaId'
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'FaId'
+  } ]
+  @UI.lineItem: [ {
+    position: 20 , 
+    label: 'FaId'
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  FaId;
+  
+    @UI.identification: [ {
+    position: 30 , 
+    label: 'Purchase Order ID'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Purchase Order ID'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  PoId;
+  
+    @EndUserText.label: 'LocalLastChangedAt'
+  @UI.identification: [ {
+    position: 120 , 
+    label: 'LocalLastChangedAt'
+  } ]
+  @UI.lineItem: [ {
+    position: 120 , 
+    label: 'LocalLastChangedAt'
+  } ]
+  @UI.selectionField: [ {
+    position: 120 
+  } ]
+  LocalLastChangedAt;
+    
+}

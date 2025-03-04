@@ -1,0 +1,31 @@
+managed implementation in class zbp_i_edi850log unique;
+strict(1);
+//strict ( 2 ); //Uncomment this line in order to enable strict mode 2. The strict mode has two variants (strict(1), strict(2)) and is prerequisite to be future proof regarding syntax and to be able to release your BO.
+
+define behavior for ZI_EDI850LOG alias ZEDI850_Log //alias <alias_name>
+persistent table zedi850_log
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+
+ field ( mandatory : create )
+ PoId;
+
+  field(readonly : update)PoId;
+  create;
+  update;
+  delete;
+
+  mapping for zedi850_log
+  {
+        PoId = po_id;
+        Edi850Status = edi850_status ;
+        StatusDesc = edistatusdesc;
+        LocalLastChangedAt = local_last_changed_at;
+        LastChangedAt = last_changed_at;
+        LocalCreatedAt = local_created_at;
+        LocalCreatedBy = local_created_by;
+        LocalLastChangedBy = local_last_changed_by;
+        }
+}

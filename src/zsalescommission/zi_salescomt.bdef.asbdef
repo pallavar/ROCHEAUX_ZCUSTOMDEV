@@ -1,0 +1,120 @@
+managed implementation in class zbp_i_salescomt unique;
+strict ( 2 );
+
+define behavior for ZI_SALESCOMT alias salescommission
+persistent table zsalescomt
+lock master
+authorization master ( instance )
+late numbering
+etag master LastChangedAt
+{
+  // field ( mandatory : create )
+  //
+  //   RunId;
+  create;
+  update;
+  delete;
+
+  association _InvSalescom { create; }
+
+  action AddInvoicesAct;
+
+  side effects
+  {
+  //determine action PostCompany executed on field _CompanyCode.
+  action AddInvoicesAct affects entity _InvSalescom,$self;
+
+  }
+
+
+
+  mapping for zsalescomt
+    {
+      RunId                   = run_id;
+      ProcessingStatus        = processing_status;
+      InvoicePaymentStatus    = invoice_pay_status;
+      CommissionPaymentStatus = commission_pay_status;
+      CommissionFromDate      = commission_pay_fromdate;
+      CommissionToDate        = commission_pay_todate;
+      RunDate                 = run_date;
+      CreatedBy               = created_by;
+      CreatedAt               = created_at;
+      LastChangedBy           = last_changed_by;
+      LastChangedAt           = last_changed_at;
+      LoclLastChangedAt       = locl_last_changed_at;
+    }
+}
+
+define behavior for ZI_INVSALESCOM alias Invsalescom
+persistent table zinvsalescom
+//draft table zprojtask_d
+//authorization master(global)
+
+lock dependent by _salescomt
+authorization dependent by _salescomt
+//etag master <field_name>
+{
+  update;
+  delete;
+  association _salescomt;
+
+  //  action (features : instance)CommissionPaymentAction parameter z_commissionstatus_dataelement;
+
+  action ( features : instance ) CommissionPaymentAction;
+
+  //  determination DetermineTotalProjectCost on modify {create;update; field ServiceUnitPrice;}
+  //
+  //  side effects { field ServiceUnitPrice affects field _project.TotalProjectCost;}
+
+  field ( readonly : update ) ItemUUID;
+  field ( numbering : managed ) ItemUUID;
+  field ( readonly : update ) RunId;
+
+  //  field (numbering : managed) ProjectTaskItemUuid;
+
+  determination setOverallInvoiceStatusItem on save { create; update; }
+
+  mapping for zinvsalescom
+    {
+      RunId                      = run_id;
+      ItemUUID                   = item_uuid;
+      ProcessingStatus           = processing_status; //added- renuga
+      ClearingStatus             = invoice_clearing_status;
+      SalesMan                   = sales_man;
+      SalesManName               = sales_man_name;
+      SalesOrganisation          = sales_organisation;
+      SalesOrgName               = sales_org_name;
+      CommissionPayFromdate      = commission_pay_fromdate;
+      CommissionPayTodate        = commission_pay_todate;
+      CommissionStatus           = commission_status;
+      CustomerId                 = customer_id;
+      CustomerName               = customer_name;
+      SalesorderId               = salesorder_id;
+      SalesorderDate             = salesorder_date;
+      BillingDocumentId          = billingdocument_id;
+      BillingdocumentDate        = billingdocument_date;
+      ItemID                     = item_id;
+      MaterialId                 = material_id;
+      MaterialDesc               = material_desc;
+      Amount                     = amount;
+      AmountCurrencycode         = amount_currencycode;
+      Quantity                   = quantity;
+      QuantityUom                = quantity_uom;
+      Unitprice                  = unitprice;
+      UnitpriceCurrencycode      = unitprice_currencycode;
+      CommissionRate             = commission_rate;
+      GPPercentage               = gp_percentage;
+      Commissionamount           = commission_amount;
+      CommamtCurrencycode        = commamount_currencycode;
+      LastUpdateAt               = last_updated_at;
+      CommissionPaydate          = commission_pay_date;
+      InvoiceClearingDate        = invoice_clearing_date;
+      OtherCharges               = other_charges;
+      OtherChargesCurrencycode   = othercharges_currencycode;
+      DiscountAmount             = discount_amount;
+      DiscountAmountCurrencycode = discamount_currencycode;
+      NetAmountCalc              = net_amount_calc;
+      NetAmtCalcCurrencycode     = netamountcalc_currencycode;
+      AccountingDocument         = z_accountingdocument;
+    }
+}

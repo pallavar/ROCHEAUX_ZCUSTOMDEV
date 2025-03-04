@@ -1,0 +1,206 @@
+@Metadata.layer: #CORE
+
+@UI: { headerInfo: { typeName: 'Sales Commission Run', typeNamePlural: 'Sales Commission Runs',title: {type: #STANDARD, value: 'RunID'},description: {
+            value: 'RunID'
+        }}}
+
+
+
+@UI.presentationVariant: [{ sortOrder: [{ by: 'LastChangedAt', direction: #DESC }] }]
+@Search.searchable: true
+
+annotate view ZC_SALESCOMT with
+{
+  @UI.facet: [
+
+                {
+                   label: 'Sales Commission Info',
+                   id: 'SCGeneralInfo',
+                   type: #COLLECTION,
+                   position: 10
+                },
+                {
+                   id: 'RunDetails',
+                   purpose:#STANDARD,
+                   type: #IDENTIFICATION_REFERENCE,
+                   label: 'Run Info',
+                   position: 10,
+                   parentId: 'SCGeneralInfo'
+                },
+  //                 {
+  //                   id: 'OverallStatus',   ////
+  //                   purpose:#STANDARD,
+  //                   type: #FIELDGROUP_REFERENCE,
+  //                   label: 'Overall Status',
+  //                   position: 30,
+  //                   parentId: 'SCGeneralInfo',
+  //                    targetQualifier: 'Overall'
+  //                },
+                {
+                   id: 'AdminSection',
+                   purpose:#STANDARD,
+                   type: #FIELDGROUP_REFERENCE,
+                   label: 'Admin Info',
+                   position: 30,    //changed from 20 to 30
+                   parentId: 'SCGeneralInfo',
+                   targetQualifier: 'AdminSection'
+                },
+                {
+                   id: 'RunID',
+                   purpose: #HEADER,
+                   type: #DATAPOINT_REFERENCE,
+                   position: 10,
+                   targetQualifier: 'SysRunID'
+                 },
+                                     {
+                   id: 'InvoiceDetails',
+                   purpose: #STANDARD,
+                   type:#LINEITEM_REFERENCE,
+                   label: 'Invoice Items',
+                   position: 20,
+                   targetElement: '_InvSalescom'
+                }
+                 ]
+
+
+
+  @EndUserText.label: 'Run ID'
+  @UI.identification: [{ position: 10 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 10 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 10}]
+  //@UI.lineItem: [{ position: 10 },{  type: #FOR_ACTION,dataAction: 'AddInvoices',label: 'Add Invoices' }]
+  @UI.selectionField: [{ position: 10 }]
+
+  @UI.dataPoint: { qualifier: 'SysRunID', title: 'Sales Commission Run'}
+
+  //  commented now
+  //  @Consumption.valueHelpDefinition: [{ entity : {name: 'ZI_SALESCOMT', element: 'RunId'  } }]
+  RunId;
+
+
+  @EndUserText.label: 'Run Processing Status'
+  @UI.identification: [{ position: 20 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 20 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 20}]
+  // @UI.lineItem: [{ position: 20 },{  type: #FOR_ACTION,dataAction: 'AddInvoices',label: 'Add Invoices' }]
+  @UI.selectionField: [{ position: 20 }
+  ]
+  @UI.dataPoint: { qualifier: 'SysProcessingStatus', title: 'Processing status'}
+  //  @Consumption.valueHelpDefinition: [{ entity : {name: 'ZI_SALESCOMT', element: 'ProcessingStatus'  } }]
+
+  @Consumption.valueHelpDefinition:
+     [{ entity: { name : 'ZI_DOMAIN_FIX_VALUES' , element: 'description' } ,
+        additionalBinding: [{ element: 'domain_name',
+                              localConstant: 'Z_PROCESSINGSTATUS_DATAELEMENT', usage: #FILTER }]
+                              , distinctValues: true
+                              }]
+  ProcessingStatus;
+
+  //@EndUserText.label: 'Commission From Date'
+  @EndUserText.label: 'Invoice From Date'
+  @UI.identification: [{ position: 30 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 30 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 30}]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.dataPoint: { qualifier: 'SysCommFromDate', title: 'Commission From Date'}
+  CommissionFromDate;
+
+  //@EndUserText.label: 'Commission To Date'
+  @EndUserText.label: 'Invoice To Date'
+  @UI.identification: [{ position: 40 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 40 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 40}]
+  @UI.selectionField: [{ position: 40 }
+  ]
+  @UI.dataPoint: { qualifier: 'SysCommToDate', title: 'Commission To Date'}
+  CommissionToDate;
+
+  @EndUserText.label: 'Overall Invoice Clearing status'
+  @UI.identification: [{ position: 50 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 50 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 50}]
+  @UI.selectionField: [{ position: 50 }]
+  @UI.dataPoint: { qualifier: 'SysOverallInvPayStatus', title: 'Overall Invoice payment status'}
+  //  @Consumption.valueHelpDefinition: [{ entity : {name: 'ZI_SALESCOMT', element: 'InvoicePaymentStatus'  } }]
+  @Consumption.valueHelpDefinition:
+      [{ entity: { name : 'ZI_DOMAIN_FIX_VALUES' , element: 'description' } ,
+         additionalBinding: [{ element: 'domain_name',
+                               localConstant: 'Z_PAYMENTSTATUS_DATAELEMENT', usage: #FILTER }]
+                               , distinctValues: true
+                               }]
+  InvoicePaymentStatus;
+
+  @EndUserText.label: 'Overall Commission status'
+  @UI.identification: [{ position: 60 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 60 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 60}]
+  @UI.selectionField: [{ position: 60 }]
+  @UI.dataPoint: { qualifier: 'SysOverallCommStatus', title: 'Overall Commission status'}
+  //  @Consumption.valueHelpDefinition: [{ entity : {name: 'ZI_SALESCOMT', element: 'CommissionPaymentStatus'  } }]
+  @Consumption.valueHelpDefinition:
+      [{ entity: { name : 'ZI_DOMAIN_FIX_VALUES' , element: 'description' } ,
+         additionalBinding: [{ element: 'domain_name',
+                               localConstant: 'Z_PAYMENTSTATUS_DATAELEMENT', usage: #FILTER }]
+                               , distinctValues: true
+                               }]
+  CommissionPaymentStatus;
+
+  @EndUserText.label: 'Run Date'
+  @UI.identification: [{ position: 70 }]
+  @UI.fieldGroup: [{ qualifier: 'RunInfo', position: 70 }]
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 70}]
+  @UI.selectionField: [{ position: 70 }
+  ]
+  @UI.dataPoint: { qualifier: 'SysCommToDate', title: 'Run Date'}
+  RunDate;
+
+
+  @UI: {
+    lineItem: [ { position: 40, importance: #HIGH } ,
+                { type: #FOR_ACTION, dataAction: 'AddInvoicesAct', label: 'Add Inv' }
+
+    ],
+
+    identification: [ { position: 10 } ,
+                    { type: #FOR_ACTION, dataAction: 'AddInvoicesAct', label: 'Add Inv' }
+                 ],
+
+    textArrangement: #TEXT_ONLY
+    }
+
+
+  @EndUserText.label: 'Created By'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 10 }]
+  @Search.defaultSearchElement: true
+  CreatedBy;
+
+  @EndUserText.label: 'Created At'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 20 }]
+  @Search.defaultSearchElement: false
+  CreatedAt;
+
+  @EndUserText.label: 'Last Changed By'
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 30 }]
+  @Search.defaultSearchElement: true
+  LastChangedBy;
+
+  @EndUserText.label: 'Last Changed At'
+  //  @UI.identification: [{ position: 40 }]
+  @UI.fieldGroup: [{ qualifier: 'AdminSection', position: 40 }]
+  @UI.lineItem: [{ position: 50}]
+  //@UI.selectionField: [{ position: 40 }]
+  @Search.defaultSearchElement: false
+  @UI.dataPoint: { qualifier: 'SysCreatedby', title: 'Changed At'}
+  LastChangedAt;
+
+
+
+
+}

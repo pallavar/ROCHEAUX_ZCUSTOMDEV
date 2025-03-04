@@ -1,0 +1,285 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+
+@UI.presentationVariant: [{ sortOrder: [{ by: 'BillingdocumentDate', direction: #DESC }] }]
+
+
+annotate view ZC_INVSALESCOM with
+{
+  @UI.facet: [
+  {
+                    id: 'InvDetails',
+                    purpose: #STANDARD,
+                    type: #IDENTIFICATION_REFERENCE,
+                    label: 'Invoice Details',
+                    position: 10
+                 }
+
+          ]
+
+  @EndUserText.label: 'Commission Status'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 20 },{  type: #FOR_ACTION,dataAction: 'CommissionPaymentAction',label: ' Pay Commission' }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @Consumption.valueHelpDefinition:
+      [{ entity: { name : 'ZI_DOMAIN_FIX_VAL' , element: 'description' } ,
+         additionalBinding: [{ element: 'domain_name',
+                               localConstant: 'Z_COMMISSIONSTATUS_DATAELEMENT', usage: #FILTER }]
+                               , distinctValues: true
+                               }]
+  CommissionStatus;
+
+  //  @EndUserText.label: 'Invoice Clearing Status'
+  //  @Search.defaultSearchElement: true
+  //  @UI.lineItem: [{ position: 30 }]
+  //  @UI.identification: [{ position: 30 }]
+  //  @UI.selectionField: [{ position: 30 }]
+  //  ClearingStatus;
+
+
+  @EndUserText.label: 'Invoice ID'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 40 }]
+  @UI.identification: [{ position: 40 }]
+  @UI.selectionField: [{ position: 40 }]
+  @Consumption.valueHelpDefinition: [{ entity : {name: 'I_BillingDocument', element: 'BillingDocument'  } }]
+  BillingDocumentId;
+
+  @EndUserText.label: 'Invoice Item ID'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 50 }]
+  @UI.identification: [{ position: 50 }]
+  //@UI.selectionField: [{ position: 50 }]
+  // @Consumption.valueHelpDefinition: [{ entity : {name: 'I_BillingDocItemPartner', element: 'Partner.BillingDocumentItem'  } }]
+  ItemID;
+
+  @EndUserText.label: 'Sales Organisation Name'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 60 }]
+  @UI.identification: [{ position: 60 }]
+  // @UI.selectionField: [{ position: 60 }]
+  SalesOrgName;
+
+
+  //  @EndUserText.label: 'Com Pay From Date'
+  //  @Search.defaultSearchElement: true
+  //  @UI.lineItem: [{ position: 60 }]
+  //  @UI.identification: [{ position: 60 }]
+  //  @UI.selectionField: [{ position: 60 }]
+  //  CommissionPayFromdate;
+  //
+  //  @EndUserText.label: 'Com Pay To Date'
+  //  @Search.defaultSearchElement: true
+  //  @UI.lineItem: [{ position: 70 }]
+  //  @UI.identification: [{ position: 70 }]
+  //  @UI.selectionField: [{ position: 70 }]
+  //  CommissionPayTodate;
+
+  @EndUserText.label: 'Sales Man'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 70 }]
+  @UI.identification: [{ position: 70 }]
+  @UI.selectionField: [{ position: 70 }]
+  @Consumption.valueHelpDefinition: [{ entity : {name: 'I_CustomerGroup', element: 'CustomerGroup'  } }]
+  SalesMan;
+
+  @EndUserText.label: 'Customer ID'
+  @Search.defaultSearchElement: true
+  //@UI.lineItem: [{ position: 80 }]
+  @UI.identification: [{ position: 80 }]
+  @UI.selectionField: [{ position: 80 }]
+  @Consumption.valueHelpDefinition: [{ entity : {name: 'I_Customer_VH', element: 'Customer'  } }]
+  CustomerId;
+
+  @EndUserText.label: 'Customer Name'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 90 }]
+  @UI.identification: [{ position: 90 }]
+  //@UI.selectionField: [{ position: 90 }]
+  //@Consumption.valueHelpDefinition: [{ entity : {name: 'I_Customer_VH', element: 'CustomerName'  } }]
+  CustomerName;
+
+  @EndUserText.label: 'Product ID'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 100 }]
+  @UI.identification: [{ position: 100 }]
+  //@UI.selectionField: [{ position: 100 }]
+  //@Consumption.valueHelpDefinition: [{ entity : {name: 'I_Product', element: 'ProductExternalID'  } }]
+  MaterialId;
+
+  @EndUserText.label: 'Product Description'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 110 }]
+  @UI.identification: [{ position: 110 }]
+  //@UI.selectionField: [{ position: 110 }]
+  MaterialDesc;
+
+  @EndUserText.label: 'Order ID'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 120 }]
+  @UI.identification: [{ position: 120 }]
+  @UI.selectionField: [{ position: 120 }]
+  // @Consumption.valueHelpDefinition: [{ entity : {name: 'I_SalesOrder', element: 'SalesOrder'  } }]
+  SalesorderId;
+
+  @EndUserText.label: 'Order Date'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 130 }]
+  @UI.identification: [{ position: 130 }]
+  //@UI.selectionField: [{ position: 130 }]
+  SalesorderDate;
+
+
+  @EndUserText.label: 'Quantity'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 140 }]
+  @UI.identification: [{ position: 140 }]
+  //@UI.selectionField: [{ position: 140 }]
+  @Consumption.valueHelpDefinition:
+    [{ additionalBinding: [{ element: 'unit',
+                             localConstant: 'abap.unit(3)', usage: #FILTER }]
+                             , distinctValues: true
+                           }]
+  Quantity;
+
+  @EndUserText.label: 'Unit Price'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 150 }]
+  @UI.identification: [{ position: 150 }]
+  //@UI.selectionField: [{ position: 150 }]
+  @Consumption.valueHelpDefinition:
+  [{ additionalBinding: [{ element: 'unitpricecurr',
+                        localConstant: 'abap.cuky', usage: #FILTER }]
+                        , distinctValues: true
+                        }]
+  Unitprice;
+
+  @EndUserText.label: 'Sales Man Name'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 160 }]
+  @UI.identification: [{ position: 160 }]
+  //@UI.selectionField: [{ position: 160 }]
+  SalesManName;
+
+  @EndUserText.label: 'Invoice Amount'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 170 }]
+  @UI.identification: [{ position: 170 }]
+  //@UI.selectionField: [{ position: 170 }]
+  @Consumption.valueHelpDefinition:
+    [{ additionalBinding: [{ element: 'amountcurr',
+                             localConstant: 'abap.cuky', usage: #FILTER }]
+                             , distinctValues: true
+                             }]
+  Amount;
+
+  @EndUserText.label: 'Invoice Date'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 180 }]
+  @UI.identification: [{ position: 180 }]
+  @UI.selectionField: [{ position: 180 }]
+  BillingdocumentDate;
+
+  @EndUserText.label: 'GP%'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 190 }]
+  @UI.identification: [{ position: 190 }]
+  // @UI.selectionField: [{ position: 190 }]
+  GPPercentage;
+
+  @EndUserText.label: 'Commission Rate'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 200 }]
+  @UI.identification: [{ position: 200 }]
+  //@UI.selectionField: [{ position: 200 }]
+  CommissionRate;
+
+  @EndUserText.label: 'Sales Organisation'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 210 }]
+  @UI.identification: [{ position: 210 }]
+  //@UI.selectionField: [{ position: 210 }]
+  SalesOrganisation;
+
+  @EndUserText.label: 'Commission amount'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 220 }]
+  @UI.identification: [{ position: 220 }]
+  //@UI.selectionField: [{ position: 220 }]
+  @Consumption.valueHelpDefinition:
+    [{ additionalBinding: [{ element: 'amountcurr',
+                             localConstant: 'abap.cuky', usage: #FILTER }]
+                             , distinctValues: true
+                             }]
+
+  Commissionamount;
+
+  @EndUserText.label: 'Last Updated At'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 230 }]
+  @UI.identification: [{ position: 230 }]
+  //@UI.selectionField: [{ position: 230 }]
+  LastUpdateAt;
+
+  @EndUserText.label: 'Commission Pay Date'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 240 }]
+  @UI.identification: [{ position: 240 }]
+  @UI.selectionField: [{ position: 240 }]
+  CommissionPaydate;
+
+  @EndUserText.label: 'Invoice Clearing Date'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 250 }]
+  @UI.identification: [{ position: 250 }]
+  @UI.selectionField: [{ position: 250 }]
+  InvoiceClearingDate;
+
+  @EndUserText.label: 'Other Charges'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 260 }]
+  @UI.identification: [{ position: 260 }]
+  // @UI.selectionField: [{ position: 260 }]
+  @Consumption.valueHelpDefinition:
+    [{ additionalBinding: [{ element: 'amountcurr',
+                             localConstant: 'abap.cuky', usage: #FILTER }]
+                             , distinctValues: true
+                             }]
+
+  OtherCharges;
+
+  @EndUserText.label: 'Discount Amount'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 270 }]
+  @UI.identification: [{ position: 270 }]
+  // @UI.selectionField: [{ position: 270 }]
+  @Consumption.valueHelpDefinition:
+    [{ additionalBinding: [{ element: 'amountcurr',
+                             localConstant: 'abap.cuky', usage: #FILTER }]
+                             , distinctValues: true
+                             }]
+
+  DiscountAmount;
+
+  @EndUserText.label: 'Net Amount'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 270 }]
+  @UI.identification: [{ position: 270 }]
+  // @UI.selectionField: [{ position: 270 }]
+  @Consumption.valueHelpDefinition:
+    [{ additionalBinding: [{ element: 'amountcurr',
+                             localConstant: 'abap.cuky', usage: #FILTER }]
+                             , distinctValues: true
+                             }]
+
+  NetAmountCalc;
+
+  @EndUserText.label: 'Invoice Accounting Number'
+  @Search.defaultSearchElement: true
+  @UI.lineItem: [{ position: 280 }]
+  @UI.identification: [{ position: 280 }]
+  @UI.selectionField: [{ position: 280 }]
+  AccountingDocument;
+
+}

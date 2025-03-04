@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_ENHO" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <TOOL>BADI_IMPL</TOOL>
+   <SHORTTEXT>Additional Email Recipients for Billing Documents</SHORTTEXT>
+   <SPOT_NAME>ES_APOC_EXT</SPOT_NAME>
+   <IMPL>
+    <ENH_BADI_IMPL_DATA>
+     <SPOT_NAME>ES_APOC_EXT</SPOT_NAME>
+     <BADI_NAME>APOC_ADD_EMAIL_RECIPIENTS</BADI_NAME>
+     <IMPL_NAME>ZAPOC_ADD_EMAIL_RECIPIENTS</IMPL_NAME>
+     <IMPL_CLASS>ZCL_APOC_ADD_EMAIL_RECIPIENTS</IMPL_CLASS>
+     <ACTIVE>X</ACTIVE>
+     <IMPL_SHORTTEXT>Additional Email Recipients for Billing Documents</IMPL_SHORTTEXT>
+    </ENH_BADI_IMPL_DATA>
+   </IMPL>
+  </asx:values>
+ </asx:abap>
+</abapGit>

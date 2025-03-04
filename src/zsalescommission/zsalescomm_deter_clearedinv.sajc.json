@@ -1,0 +1,11 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Sales Commission Determine Fully Cleared Invoices",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "className": "ZCL_SALESCOMM_DETER_CLEAREDINV"
+  }
+}

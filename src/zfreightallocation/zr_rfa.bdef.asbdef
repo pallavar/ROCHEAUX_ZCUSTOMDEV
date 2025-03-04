@@ -1,0 +1,135 @@
+managed implementation in class zbp_r_rfa unique;
+strict ( 2 );
+
+define behavior for ZR_RFA alias AF
+//with additional save
+persistent table zrfa
+lock master
+//early numbering
+late numbering
+authorization master ( global )
+etag master LoclLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly : update ) FaId;
+  field ( readonly ) CreatedAt, CreatedBy, LastChangedAt, LastChangedBy, LoclLastChangedAt;
+  association _FAI { create ( features : instance ); }
+  association _ZFAPO { create ( features : instance ); }
+  action RetrievePO;
+  action UpdatePOCondition;
+  action ( features : instance ) RetrievePO1 result [1] $self;
+
+  //determination setCurrencyCode on save { create; field Freightamount; }
+  determination setCurrencyCode on save { create; update; field Freightamount; }
+  // determination setCurrencyCode on save { create; update; }
+
+  side effects
+  {
+    action RetrievePO affects entity _FAI, $self;
+    action UpdatePOCondition affects entity _FAI, $self;
+
+  field Freightamount affects $self;
+
+
+  }
+
+  mapping for zrfa
+    {
+      FaId              = fa_id;
+      Freightamount     = freightamount;
+      CurrencyCode      = currency_code;
+      CreatedBy         = created_by;
+      CreatedAt         = created_at;
+      LastChangedBy     = last_changed_by;
+      LastChangedAt     = last_changed_at;
+      LoclLastChangedAt = locl_last_changed_at;
+    }
+}
+
+define behavior for ZR_RFAI alias AFI
+persistent table zrfai
+lock dependent by _AF
+//early numbering
+authorization dependent by _AF
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( readonly : update ) ItemUuid;
+  field ( numbering : managed ) ItemUUID;
+  field ( readonly : update ) FaId;
+  field ( readonly ) AllocFrt, AllowedQuantity, ConValue, ItemId, OrdQty, OrderPo, PoUnitPrice, RcvdAmount, FRTVALUE, UnitField, CukyField, LocalLastChangedAt;
+
+  association _AF { }
+
+  determination calculateTotalPrice on modify { create; field RcvdQty; }
+  determination calculateTotalPrice1 on save { create; }
+
+  side effects
+  {
+    //field RcvdQty affects field RcvdAmount;
+    field RcvdQty affects $self;
+  }
+  mapping for zrfai
+    {
+      AllocFrt           = alloc_frt;
+      AllowedQuantity    = allowed_quantity;
+      ConValue           = con_value;
+      CukyField          = cuky_field;
+      FaId               = fa_id;
+      ItemId             = item_id;
+      ItemUuid           = item_uuid;
+      LocalLastChangedAt = local_last_changed_at;
+      OrdQty             = ord_qty;
+      OrderPo            = order_po;
+      PoUnitPrice        = po_unit_price;
+      RcvdAmount         = rcvd_amount;
+      RcvdQty            = rcvd_qty;
+      UnitField          = unit_field;
+      FRTVALUE           = frt_value;
+    }
+
+
+
+
+}
+
+
+define behavior for ZR_RFAPO alias AFIPO
+persistent table zrfapo
+lock dependent by _AF
+//early numbering
+authorization dependent by _AF
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( readonly : update ) ItemUuid;
+  field ( numbering : managed ) ItemUUID;
+  field ( readonly : update ) FaId;
+  field ( readonly ) LocalLastChangedAt;
+
+  association _AF { }
+
+  //  side effects
+  //  {
+  //    action RetrievePO affects entity _FAI, entity _ZFAPO, $self;
+  //    action UpdatePOCondition affects entity _FAI, entity _ZFAPO, $self;
+  //
+  //  }
+
+  mapping for zrfapo
+    {
+      FaId               = fa_id;
+      ItemUuid           = item_uuid;
+      LocalLastChangedAt = local_last_changed_at;
+      PoId               = po_id;
+    }
+
+
+
+
+}

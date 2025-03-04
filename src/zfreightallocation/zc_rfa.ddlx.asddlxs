@@ -1,0 +1,137 @@
+//@Metadata.layer: #CORE
+//@UI.headerInfo.typeName: 'Freight Allocation'
+//@UI.headerInfo.typeNamePlural: 'Freight Allocations'
+//@UI.headerInfo.title.type: #STANDARD
+//@UI.headerInfo.title.value: 'FaId'
+//@UI.headerInfo.description.type: #STANDARD
+
+@Metadata.layer: #CORE
+
+@UI: { headerInfo: { typeName: 'Freight Allocation', typeNamePlural: 'Freight Allocations',
+title: {type: #STANDARD, value: 'FaID'}
+//description: {
+//          value: 'FaId'
+//        }
+        }}
+
+@UI.presentationVariant: [{ sortOrder: [{ by: 'LastChangedAt', direction: #DESC }] }] //renuga
+@Search.searchable: true //renuga
+
+annotate view ZC_RFA with
+
+{
+  @UI.facet: [ 
+  {
+    label: 'General Information', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  }, 
+ 
+  {
+    label: 'Purchase Order Items', 
+    id: 'Items', 
+    purpose: #STANDARD, 
+    position: 12 , 
+    type: #LINEITEM_REFERENCE, 
+    targetElement: '_FAI'
+  },
+  {
+    label: 'Purchase Order List', 
+    id: 'POItems', 
+    purpose: #STANDARD, 
+    position: 11 , 
+    type: #LINEITEM_REFERENCE, 
+    targetElement: '_ZFAPO'
+  } ,
+  { //added this bracket for data point reference- renuga
+                   id: 'FaID',
+                   purpose: #HEADER,
+                   type: #DATAPOINT_REFERENCE,
+                   position: 10,
+                   targetQualifier: 'SysFaID'
+                 }]
+  
+  @UI.identification: [ {
+    position: 10 , 
+    label: 'Freight Allocation ID'
+  } ]
+   @Search.defaultSearchElement: true //renuga
+  @UI.lineItem: [ {
+    position: 10 , 
+    label: 'Freight Allocation ID'
+  } ]
+  @UI.selectionField: [ {
+    position: 10 
+  } ]
+    @UI.dataPoint: { qualifier: 'SysFaID', title: 'Freight Allocation'} //renuga
+  FaId;
+  
+   @EndUserText.label: 'Freight amount'
+  @UI: { lineItem:       [ { position: 20,label: 'Freight Amount', importance: #HIGH },
+                           { type: #FOR_ACTION, dataAction: 'RetrievePO', label: 'Retrieve PO' }, 
+                           { type: #FOR_ACTION, dataAction: 'UpdatePOCondition', label: 'Update PO Condition' }],
+         identification: [ { position: 20, label: 'Freight Amount' },
+                           { type: #FOR_ACTION, dataAction: 'RetrievePO', label: 'Retrieve PO' }, 
+                           { type: #FOR_ACTION, dataAction: 'UpdatePOCondition', label: 'Update PO Condition' }],
+         selectionField: [ { position: 20 } ] }
+//           @Consumption.filter.selectionType: #RANGE  //renuga
+//            @Consumption.filter.multipleSelections: true
+            
+  Freightamount;
+  
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Created By'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Created By'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  CreatedBy;
+  
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'Created At'
+  } ]
+  @UI.lineItem: [ {
+    position: 40 , 
+    label: 'Created At'
+  } ]
+  @UI.selectionField: [ {
+    position: 40 
+  } ]
+  CreatedAt;
+  
+  @UI.identification: [ {
+    position: 50 , 
+    label: 'Last Changed By'
+  } ]
+  @UI.lineItem: [ {
+    position: 50 , 
+    label: 'Last Changed By'
+  } ]
+  @UI.selectionField: [ {
+    position: 50 
+  } ]
+  LastChangedBy;
+  
+  @UI.identification: [ {
+    position: 60 , 
+    label: 'Last Changed At'
+  } ]
+  @UI.lineItem: [ {
+    position: 60 , 
+    label: 'Last Changed At'
+  } ]
+  @UI.selectionField: [ {
+    position: 60 
+  } ]
+  LastChangedAt;
+  
+ 
+}

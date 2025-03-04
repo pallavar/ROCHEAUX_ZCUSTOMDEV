@@ -1,0 +1,33 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Sales Commission Invoice Items",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "zrochinvsalescom"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_924CA2D59207394805E621867E00C04A23E915CA_TM",
+    "semanticObject": "Z_INVSALESCOM_SEM",
+    "action": "display",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_924CA2D59207394805E621867E00C04A23E915CA_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Sales Commission Invoice Items"
+      }
+    }
+  ]
+}

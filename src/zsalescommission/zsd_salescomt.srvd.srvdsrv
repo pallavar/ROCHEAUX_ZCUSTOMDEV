@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for ZSALESCOMT'
+define service ZSD_SALESCOMT {
+  expose ZC_SALESCOMT;
+  expose ZC_INVSALESCOM;
+}

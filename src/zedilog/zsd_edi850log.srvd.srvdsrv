@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service Definition for EDI 850 Log'
+define service ZSD_EDI850Log {
+  expose ZC_EDI850OG as POID;
+}

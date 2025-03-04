@@ -1,0 +1,27 @@
+projection;
+strict ( 2 );
+use side effects;
+
+define behavior for ZC_SALESCOMT alias salescommission
+use etag
+{
+  use create;
+  use update;
+  use delete;
+  use action AddInvoicesAct;
+
+  use association _InvSalescom{ create;}
+
+
+}
+
+define behavior for ZC_INVSALESCOM alias Invsalescom
+use etag
+{
+  use update;
+  use delete;
+  use action CommissionPaymentAction;
+
+  use association _salescomt;
+
+}

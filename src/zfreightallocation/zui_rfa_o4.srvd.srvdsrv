@@ -1,0 +1,6 @@
+@EndUserText: {label: 'Service Definition for ZC_RFA'}
+define service ZUI_RFA_O4 {
+  expose ZC_RFA;
+  expose ZC_RFAI;
+  expose ZC_RFAIPO;
+}

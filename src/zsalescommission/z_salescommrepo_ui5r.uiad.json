@@ -1,0 +1,34 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "Sales Commission",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD"
+  },
+  "ui5AppDetails": {
+    "appId": "salescommproject"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_9F840705C12D36D56026CBB2A2A3F8FD2F5327B5_TM",
+    "semanticObject": "salescommsem",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_9F840705C12D36D56026CBB2A2A3F8FD2F5327B5_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Sales Commission",
+        "subtitle": "Sales Commission Subtitle"
+      }
+    }
+  ]
+}
