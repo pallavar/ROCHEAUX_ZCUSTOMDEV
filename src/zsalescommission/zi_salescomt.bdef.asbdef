@@ -11,6 +11,9 @@ etag master LastChangedAt
   // field ( mandatory : create )
   //
   //   RunId;
+
+  field ( readonly : update ) RunId;
+
   create;
   update;
   delete;
@@ -21,9 +24,7 @@ etag master LastChangedAt
 
   side effects
   {
-  //determine action PostCompany executed on field _CompanyCode.
-  action AddInvoicesAct affects entity _InvSalescom,$self;
-
+    action AddInvoicesAct affects entity _InvSalescom, $self;
   }
 
 
@@ -47,7 +48,7 @@ etag master LastChangedAt
 
 define behavior for ZI_INVSALESCOM alias Invsalescom
 persistent table zinvsalescom
-//draft table zprojtask_d
+
 //authorization master(global)
 
 lock dependent by _salescomt
@@ -58,19 +59,34 @@ authorization dependent by _salescomt
   delete;
   association _salescomt;
 
-  //  action (features : instance)CommissionPaymentAction parameter z_commissionstatus_dataelement;
-
   action ( features : instance ) CommissionPaymentAction;
 
-  //  determination DetermineTotalProjectCost on modify {create;update; field ServiceUnitPrice;}
-  //
-  //  side effects { field ServiceUnitPrice affects field _project.TotalProjectCost;}
+  determination autocalculate on modify { update; field Amount, DiscountAmount, OtherCharges, CommissionRate; }
 
-  field ( readonly : update ) ItemUUID;
+
+
+//Added for dynamically reflecting the calcuated net amount and commission amount
+  side effects
+  {
+    field amount affects field NetAmountCalc, field Commissionamount,$self;
+    field OtherCharges affects field NetAmountCalc, field Commissionamount,$self;
+    field DiscountAmount affects field NetAmountCalc,field Commissionamount,$self;
+    field CommissionRate affects field NetAmountCalc, field Commissionamount, $self;
+  }
+
+
   field ( numbering : managed ) ItemUUID;
-  field ( readonly : update ) RunId;
 
-  //  field (numbering : managed) ProjectTaskItemUuid;
+  field ( readonly : update ) ItemUUID,
+  RunId,
+  NetAmountCalc,
+  NetAmtCalcCurrencycode,
+  Commissionamount,
+  CommamtCurrencycode;
+
+
+
+
 
   determination setOverallInvoiceStatusItem on save { create; update; }
 

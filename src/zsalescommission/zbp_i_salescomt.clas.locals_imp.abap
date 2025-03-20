@@ -211,11 +211,11 @@ CLASS lhc_salescommission IMPLEMENTATION.
                 total = conditionamount1 - conditionamount2.
 
                 IF conditionamount1 IS NOT INITIAL OR conditionamount1 <> 0 .   "17/01/2025 TO AVOID Runtime Error: 'BCD_ZERODIVIDE'
-                lv_text = total / conditionamount1 * 100.   "DIV BY ZERO TO BE HANDLED
-              ELSE.
+                  lv_text = total / conditionamount1 * 100.   "DIV BY ZERO TO BE HANDLED
+                ELSE.
 *                lv_text = total * 100.
-                 lv_text = 0.
-              ENDIF.
+                  lv_text = 0.
+                ENDIF.
 
 
 
@@ -264,10 +264,10 @@ CLASS lhc_salescommission IMPLEMENTATION.
                     DATA(unitprice) = ls_salesorderitem-unitprice.
                     DATA(unitpricequantity) =  ls_salesorderitem-unitpricequantity.
                     IF unitpricequantity IS NOT INITIAL OR unitpricequantity <> 0.  "17/01/2025 TO AVOID Runtime Error: 'BCD_ZERODIVIDE'
-                        unitprice = unitprice / unitpricequantity.
+                      unitprice = unitprice / unitpricequantity.
                     ELSE.
-                        unitprice = 0.
-                  ENDIF.
+                      unitprice = 0.
+                    ENDIF.
                     DATA(unitpricecurrency) = ls_salesorderitem-unitpricecurrency.
                   ENDLOOP.
                 ENDIF.
@@ -401,6 +401,8 @@ CLASS lhc_invsalescom DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys REQUEST requested_authorizations FOR invsalescom RESULT result.
     METHODS get_instance_features FOR INSTANCE FEATURES
       IMPORTING keys REQUEST requested_features FOR invsalescom RESULT result.
+    METHODS autocalculate FOR DETERMINE ON MODIFY
+      IMPORTING keys FOR invsalescom~autocalculate.
 
 ENDCLASS.
 
@@ -592,6 +594,57 @@ CLASS lhc_invsalescom IMPLEMENTATION.
 
 
     ENDLOOP.
+
+  ENDMETHOD.
+
+
+*Autocalculation for Net Amount and Commmission Amount
+
+  METHOD autocalculate.
+
+    READ ENTITIES OF zi_salescomt IN LOCAL MODE
+    ENTITY invsalescom
+    ALL FIELDS WITH VALUE #(  ( %key-itemuuid = keys[ 1 ]-%key-itemuuid ) )
+    RESULT DATA(invoiceitem).
+
+    CHECK ( invoiceitem IS NOT INITIAL ).
+
+    DATA(invoice_item_uuid) = invoiceitem[ 1 ]-itemuuid.
+    DATA(commission_rate) = invoiceitem[ 1 ]-commissionrate.
+
+    " Avoid modifying if NetAmountCalc is already same
+    DATA(new_net_amount) = invoiceitem[ 1 ]-amount -  invoiceitem[ 1 ]-othercharges - invoiceitem[ 1 ]-discountamount.
+
+*    DATA(new_commission_amount) = invoiceitem[ 1 ]-netamountcalc * commission_rate / 100.
+
+        DATA(new_commission_amount) = new_net_amount * commission_rate / 100.
+
+
+    IF invoiceitem[ 1 ]-netamountcalc <> new_net_amount.
+      .
+    ELSEIF
+    invoiceitem[ 1 ]-commissionamount <> new_commission_amount.
+
+    ELSE.
+      RETURN.
+      " No need to update, avoid infinite loop
+    ENDIF.
+
+    MODIFY ENTITIES OF zi_salescomt IN LOCAL MODE
+    ENTITY invsalescom
+    UPDATE FROM VALUE #( (  %key-itemuuid = invoice_item_uuid
+
+                         %data-netamountcalc = new_net_amount
+                         %data-netamtcalccurrencycode = invoiceitem[ 1 ]-AmountCurrencycode
+                         %data-commissionamount = new_commission_amount
+                         %data-commamtcurrencycode = invoiceitem[ 1 ]-AmountCurrencycode
+
+                         %control-netamountcalc = if_abap_behv=>mk-on
+                         %control-netamtcalccurrencycode = if_abap_behv=>mk-on
+                         %control-commissionamount = if_abap_behv=>mk-on
+                         %control-commamtcurrencycode = if_abap_behv=>mk-on ) )
+    FAILED DATA(faileddata)
+    REPORTED DATA(reporteddata).
 
   ENDMETHOD.
 

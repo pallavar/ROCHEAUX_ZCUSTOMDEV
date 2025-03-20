@@ -117,9 +117,11 @@ CLASS ZCL_SALESCOMM_DETER_CLEAREDINV IMPLEMENTATION.
 
           "Assign Net Amount calculated, Net Amount calc = Invoice Amount – Other Amount – Discount
           <fs_invsalescom>-net_amount_calc =  <fs_invsalescom>-amount -  <fs_invsalescom>-other_charges - <fs_invsalescom>-discount_amount.
-          <fs_invsalescom>-netamountcalc_currencycode = <fs_invsalescom>-othercharges_currencycode.
 
-          DATA(ww) = '5'.
+*          Commented this line since other charges currency code could be NULL in some case there is no other charges
+*          <fs_invsalescom>-netamountcalc_currencycode = <fs_invsalescom>-othercharges_currencycode.
+
+          <fs_invsalescom>-netamountcalc_currencycode = <fs_invsalescom>-amount_currencycode.
 
         ENDLOOP.
 
