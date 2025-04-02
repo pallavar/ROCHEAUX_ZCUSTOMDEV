@@ -32,6 +32,14 @@ CLASS ZCL_APOC_ADD_EMAIL_RECIPIENTS IMPLEMENTATION.
       WHEN 'BILLING_DOCUMENT'.
         addemailrecipients = 'YES'.
 
+*      Included this as new request by Surendar - START
+
+      WHEN 'PAYM_ADV_EDI'.
+        addemailrecipients = 'YES'.
+
+*      Included this as new request by Surendar  - END
+
+
       WHEN 'PURCHASE_ORDER'.
         addemailrecipients = 'NO'.
 

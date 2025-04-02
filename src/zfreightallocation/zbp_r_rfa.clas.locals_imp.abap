@@ -236,36 +236,79 @@ CLASS lhc_af IMPLEMENTATION.
         IF sy-subrc = 0.
           DATA: lt_item_pricing_element TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
 
+          DATA: lt_update_data TYPE TABLE OF i_purchaseorderitemtp_2.
+
+          DATA lt_update_poitempricingitem TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
+          DATA ls_update_poitempricingitem LIKE LINE OF lt_update_poitempricingitem.
+
+          DATA lt_target_poitempricingitem LIKE ls_update_poitempricingitem-%target.
+          DATA ls_target_poitempricingitem LIKE LINE OF lt_target_poitempricingitem.
+
+
+
           LOOP AT afis_val_result INTO DATA(afi_val).
 
-            MODIFY ENTITIES OF i_purchaseordertp_2 PRIVILEGED
-               ENTITY purchaseorderitem
-               CREATE BY \_purordpricingelement SET FIELDS WITH VALUE #(
-                 ( %key-purchaseorder    = afi_val-orderpo
-                   %key-purchaseorderitem = afi_val-itemid
-                   %target = VALUE #( (
-                     %cid                = |CID{ sy-tabix }|
-                     conditiontype       = 'FVA1'
-                     conditionrateamount = afi_val-convalue
-                     conditioncurrency   = afi_val-cukyfield ) ) ) )
-               MAPPED DATA(mapped_pe)
-               FAILED DATA(failed_pe)
-               REPORTED DATA(reported_pe).
+           DATA(unix_tstmp) = xco_cp=>sy->unix_timestamp( )->value.
 
-            DATA(test) = `end`.
+           " Generate Unique Content ID for each entry
+            DATA(lv_cid) = cl_system_uuid=>create_uuid_c22_static( ).
 
+            "Append header values
+            ls_target_poitempricingitem = VALUE #( %key-purchaseorder            = afi_val-orderpo
+*            ls_update_poitempricingitem = VALUE #( %key-purchaseorder            = afi_val-orderpo
+
+                                                   %key-purchaseorderitem        = afi_val-itemid
+*                                                   %cid                        = |CID{ sy-tabix }|
+*                                          %cid                          =  cl_system_uuid=>create_uuid_c22_static( )
+                                                   %cid                          =  lv_cid
+                                                   conditiontype                 = 'FVA1'
+                                                   conditionrateamount           = afi_val-RcvdAmount
+                                                   conditioncurrency             = afi_val-cukyfield
+                                                   %control = VALUE #( conditiontype                = if_abap_behv=>mk-on
+                                                                       conditionrateamount          = if_abap_behv=>mk-on
+                                                                       conditioncurrency            = if_abap_behv=>mk-on
+                                                                     )
+                                                 ).
+
+                       APPEND ls_target_poitempricingitem TO lt_target_poitempricingitem.
+
+*                       APPEND ls_update_poitempricingitem TO lt_update_poitempricingitem.
+
+                    ls_update_poitempricingitem = VALUE #( %key-purchaseorder = afi_val-orderpo
+                                                              %key-purchaseorderitem = afi_val-itemid
+                                                              %target = lt_target_poitempricingitem ).
+                       APPEND ls_update_poitempricingitem TO lt_update_poitempricingitem.
+
+                    CLEAR ls_target_poitempricingitem.
+                    CLEAR lt_target_poitempricingitem.
           ENDLOOP.
 
-          " DATA: lt_po_header TYPE TABLE FOR CREATE i_purchaseordertp_2\_purchaseorderitem.
+
+
 
 
         ENDIF.
 
       ENDLOOP.
+
+
+*                  CLEAR lt_target_poitempricingitem.
+
+          " DATA: lt_po_header TYPE TABLE FOR CREATE i_purchaseordertp_2\_purchaseorderitem.
+          MODIFY ENTITIES OF i_purchaseordertp_2 PRIVILEGED
+              ENTITY purchaseorderitem
+              CREATE BY \_purordpricingelement FROM lt_update_poitempricingitem
+* CREATE BY \_purordpricingelement FROM lt_update_poitempricingitem
+              MAPPED DATA(mapped_pe)
+              FAILED DATA(failed_pe)
+              REPORTED DATA(reported_pe).
+
+
     ENDIF.
 
-
   ENDMETHOD.
+
+
   METHOD setcurrencycode.
 
     READ ENTITIES OF zr_rfa IN LOCAL MODE

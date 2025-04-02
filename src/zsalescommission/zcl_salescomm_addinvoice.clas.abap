@@ -202,7 +202,10 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
 
               "other charges = PPR0 Condition value - Net Amount
               DATA: other_charges_amt TYPE p LENGTH 10 DECIMALS 2.
-              other_charges_amt =  conditionamount1 - amount.
+*              other_charges_amt =  conditionamount1 - amount.
+
+*               Changed vice versa formula
+               other_charges_amt =  amount - conditionamount1.
 
               SELECT conditionratevalue,conditionamount,transactioncurrency
               FROM i_billingdocumentitemprcgelmnt
