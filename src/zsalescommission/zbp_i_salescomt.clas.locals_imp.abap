@@ -616,12 +616,36 @@ CLASS lhc_invsalescom IMPLEMENTATION.
     DATA(invoice_item_uuid) = invoiceitem[ 1 ]-itemuuid.
     DATA(commission_rate) = invoiceitem[ 1 ]-commissionrate.
 
+*    new code added 04042025 by Pallava - BEGIN
+
+    " Convert to floating point type for higher precision
+    DATA: lv_amount          TYPE f,
+          lv_othercharges    TYPE f,
+          lv_discountamount  TYPE f,
+          lv_commission_rate TYPE f,
+          lv_new_commission_amount TYPE f.
+
+    lv_amount          = invoiceitem[ 1 ]-amount.
+    lv_othercharges    = invoiceitem[ 1 ]-othercharges.
+    lv_discountamount  = invoiceitem[ 1 ]-discountamount.
+    lv_commission_rate = commission_rate.
+
+    " Perform calculation with floating point
+    DATA(lv_new_net_amount) = lv_amount - lv_othercharges - lv_discountamount.
+    lv_new_commission_amount = lv_new_net_amount * lv_commission_rate / 100.
+
+    " Convert back to currency type
+    DATA new_net_amount        TYPE p LENGTH 10 DECIMALS 2.
+    DATA new_commission_amount   TYPE p LENGTH 10 DECIMALS 2.
+
     " Avoid modifying if NetAmountCalc is already same
-    DATA(new_net_amount) = invoiceitem[ 1 ]-amount -  invoiceitem[ 1 ]-othercharges - invoiceitem[ 1 ]-discountamount.
+*    DATA(new_net_amount) = invoiceitem[ 1 ]-amount -  invoiceitem[ 1 ]-othercharges - invoiceitem[ 1 ]-discountamount.
+     new_net_amount = lv_new_net_amount.
 
 *    DATA(new_commission_amount) = invoiceitem[ 1 ]-netamountcalc * commission_rate / 100.
+     new_commission_amount = new_net_amount * commission_rate / 100.
 
-        DATA(new_commission_amount) = new_net_amount * commission_rate / 100.
+*    new code added 04042025 by Pallava - END
 
 
     IF invoiceitem[ 1 ]-netamountcalc <> new_net_amount.

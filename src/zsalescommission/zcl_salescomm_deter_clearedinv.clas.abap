@@ -109,9 +109,21 @@ CLASS ZCL_SALESCOMM_DETER_CLEAREDINV IMPLEMENTATION.
                AND glaccount = @gl_account "'0071050000'  " ( hardcoded or fixed)
              INTO @DATA(je_type).
 
+
+*             Code added by Pallava on 07042025
+                   DATA: discount_amount_f          TYPE f.
+                   discount_amount_f = je_type-amountincompanycodecurrency.
+
+
           IF sy-subrc = 0.
-            <fs_invsalescom>-discount_amount = je_type-amountincompanycodecurrency.
+*            <fs_invsalescom>-discount_amount = je_type-amountincompanycodecurrency.
+            <fs_invsalescom>-discount_amount = discount_amount_f.
+*            Code added by Pallava on 07042025
+
             <fs_invsalescom>-discamount_currencycode = je_type-companycodecurrency.
+          ELSE.
+            <fs_invsalescom>-discount_amount = 0.
+            <fs_invsalescom>-discamount_currencycode = <fs_invsalescom>-amount_currencycode.
 
           ENDIF.
 
@@ -408,6 +420,9 @@ CLASS ZCL_SALESCOMM_DETER_CLEAREDINV IMPLEMENTATION.
             <fs_invsalescom>-discount_amount = je_type-amountincompanycodecurrency.
             <fs_invsalescom>-discamount_currencycode = je_type-companycodecurrency.
             out->write( 'Cash Discount: ' && <fs_invsalescom>-discount_amount ).
+            ELSE.
+                 <fs_invsalescom>-discount_amount = 0.
+                 <fs_invsalescom>-discamount_currencycode = <fs_invsalescom>-amount_currencycode.
           ENDIF.
 
 

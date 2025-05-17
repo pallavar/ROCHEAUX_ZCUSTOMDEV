@@ -146,6 +146,19 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
             ls_salesorderitem TYPE ty_salesorderitem.
 
 
+      DATA: amount_f          TYPE f.
+      DATA  amount            TYPE p LENGTH 10 DECIMALS 2.
+
+      DATA: unitprice_f       TYPE f.
+      DATA  unitprice         TYPE p LENGTH 10 DECIMALS 2.
+
+     DATA: commissionamount_f TYPE f.
+     DATA  commissionamount  TYPE p LENGTH 10 DECIMALS 2.
+
+
+
+
+
       "Query billing document, payment status = fully cleared, posting status = completed
       SELECT billingdocument,invoiceclearingstatus,accountingdocument
         FROM i_billingdocument  WITH PRIVILEGED ACCESS
@@ -177,7 +190,15 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
               DATA(product) = ls_billingdocuitem-product.
               DATA(salesdocument) = ls_billingdocuitem-salesdocument.
               DATA(quantity) = ls_billingdocuitem-quantity.
-              DATA(amount) = ls_billingdocuitem-amount.
+
+*              Code added by Pallava on 04042025
+
+*              DATA(amount) = ls_billingdocuitem-amount.
+               amount_f = ls_billingdocuitem-amount.
+               amount = amount_f.
+
+*              Code added by Pallava on 04042025
+
 
               "Query customer ID to get customer name
               SELECT SINGLE customername
@@ -200,7 +221,7 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
                 ENDLOOP.
               ENDIF.
 
-              "other charges = PPR0 Condition value - Net Amount
+              "other charges = Net Amount - PPR0 Condition value
               DATA: other_charges_amt TYPE p LENGTH 10 DECIMALS 2.
 *              other_charges_amt =  conditionamount1 - amount.
 
@@ -219,7 +240,6 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
               ENDIF.
 
 
-*
 *              DATA(total) = conditionamount1 - conditionamount2.
 *              "DATA(gp) = total / conditionamount1 * total.   "DIV BY ZERO TO BE HANDLED
 *              DATA(gp) = total / conditionamount1 * 100.   "DIV BY ZERO TO BE HANDLED
@@ -260,7 +280,11 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
               IF sy-subrc = 0.
                 LOOP AT lt_billdocitemprcelement3 INTO ls_billdocitemprcelement3.
                   DATA(commrate) = ls_billdocitemprcelement3-rateamount.
-                  DATA(commissionamount) = ls_billdocitemprcelement3-commamount.
+*                  DATA(commissionamount) = ls_billdocitemprcelement3-commamount.
+
+                    commissionamount_f = ls_billdocitemprcelement3-commamount.
+                    commissionamount = commissionamount_f.
+
                   DATA(trans_currency) = ls_billdocitemprcelement3-commamountcurr.
                   "    DATA(rate_currency) = ls_billdocitemprcelement-commratecurr.
                 ENDLOOP.
@@ -279,7 +303,10 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
 
               IF sy-subrc = 0.
                 LOOP AT lt_salesorderitem INTO ls_salesorderitem.
-                  DATA(unitprice) = ls_salesorderitem-unitprice.
+*                 DATA(unitprice) = ls_salesorderitem-unitprice.
+                  unitprice_f = ls_salesorderitem-unitprice.
+                  unitprice = unitprice_f.
+
                   DATA(unitpricequantity) =  ls_salesorderitem-unitpricequantity.
                   IF unitpricequantity IS NOT INITIAL OR unitpricequantity <> 0.  "17/01/2025 TO AVOID Runtime Error: 'BCD_ZERODIVIDE'
                     unitprice = unitprice / unitpricequantity.
@@ -312,7 +339,8 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
                                        salesorderid = |{ ls_billingdocuitem-salesdocument ALPHA = OUT }|
                                        salesorderdate = sales_order_date  "ls_salesorder-salesorderdate
                                        billingdocumentdate = ls_billingdocuitem-invoicedate
-                                       amount = ls_billingdocuitem-amount
+*                                      amount = ls_billingdocuitem-amount
+                                       amount = amount
                                        amountcurrencycode = ls_billingdocuitem-amountcurrency
                                        customerid = |{ ls_billingdocuitem-customerid ALPHA = OUT }|
                                        customername = retrievedcustomername

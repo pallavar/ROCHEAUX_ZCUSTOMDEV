@@ -219,92 +219,276 @@ CLASS lhc_af IMPLEMENTATION.
   METHOD retrievepo1.
   ENDMETHOD.
 
+
   METHOD updatepocondition.
 
-    READ ENTITIES OF zr_rfa IN LOCAL MODE
-               ENTITY af
-               ALL FIELDS WITH VALUE #( ( %key-faid = keys[ 1 ]-%key-faid ) )
-               RESULT DATA(afs_val).
+*2ND APPROACH
 
-    IF sy-subrc = 0.
-      LOOP AT afs_val INTO DATA(af_val).
-        READ ENTITIES OF zr_rfa IN LOCAL MODE
-          ENTITY af BY \_fai
-            ALL FIELDS WITH VALUE #( ( %tky = af_val-%tky ) )
-          RESULT DATA(afis_val_result).
+*    READ ENTITIES OF zr_rfa IN LOCAL MODE
+*               ENTITY af
+*               ALL FIELDS WITH VALUE #( ( %key-faid = keys[ 1 ]-%key-faid ) )
+*               RESULT DATA(afs_val).
+*
+*    IF sy-subrc = 0.
+*      LOOP AT afs_val INTO DATA(af_val).
+*        READ ENTITIES OF zr_rfa IN LOCAL MODE
+*          ENTITY af BY \_fai
+*            ALL FIELDS WITH VALUE #( ( %tky = af_val-%tky ) )
+*          RESULT DATA(afis_val_result).
+*
+*        IF sy-subrc = 0.
+*          DATA: lt_item_pricing_element TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
+*
+*          DATA: lt_update_data TYPE TABLE OF i_purchaseorderitemtp_2.
+*
+*          DATA lt_update_poitempricingitem TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
+*
+*          DATA ls_update_poitempricingitem LIKE LINE OF lt_update_poitempricingitem.
+*
+*          DATA lt_target_poitempricingitem LIKE ls_update_poitempricingitem-%target.
+*          DATA ls_target_poitempricingitem LIKE LINE OF lt_target_poitempricingitem.
+*
+*
+*
+*          LOOP AT afis_val_result INTO DATA(afi_val).
+*
+*            DATA(unix_tstmp) = xco_cp=>sy->unix_timestamp( )->value.
+*
+*            " Generate Unique Content ID for each entry
+*            TRY.
+*                DATA(lv_cid) = cl_system_uuid=>create_uuid_c22_static( ).
+*              CATCH cx_uuid_error.
+*                "handle exception
+*            ENDTRY.
+*
+*
+**               data(lv_cid) = cl_system_uuid=>create_uuid_c22_static( ).
+*            "Append header values
+*            ls_target_poitempricingitem = VALUE #( %key-purchaseorder            = afi_val-orderpo
+**            ls_update_poitempricingitem = VALUE #( %key-purchaseorder            = afi_val-orderpo
+*
+*                                                   %key-purchaseorderitem        = afi_val-itemid
+**                                                   %cid                        = |CID{ sy-tabix }|
+**                                          %cid                          =  cl_system_uuid=>create_uuid_c22_static( )
+*                                                    %cid                          =  lv_cid
+*                                                   conditiontype                 = 'FVA1'
+*                                                   conditionrateamount           = afi_val-rcvdamount
+*                                                   conditioncurrency             = afi_val-cukyfield
+*                                                   %control = VALUE #( conditiontype                = if_abap_behv=>mk-on
+*                                                                       conditionrateamount          = if_abap_behv=>mk-on
+*                                                                       conditioncurrency            = if_abap_behv=>mk-on
+*                                                                     )
+*                                                 ).
+*
+*
+*            APPEND ls_target_poitempricingitem TO lt_target_poitempricingitem.
+*
+**            CLEAR lv_cid.
+*            CLEAR ls_target_poitempricingitem.
+*
+*
+*
+**                       APPEND ls_update_poitempricingitem TO lt_update_poitempricingitem.
+*
+*
+*            " Create update structure for current PO item
+*            ls_update_poitempricingitem = VALUE #( %key-purchaseorder = afi_val-orderpo
+*                                                      %key-purchaseorderitem = afi_val-itemid
+*                                                      %target = lt_target_poitempricingitem ).
+*
+*            " Collect all updates
+*            APPEND ls_update_poitempricingitem TO lt_update_poitempricingitem.
+*
+**                    CLEAR ls_target_poitempricingitem.
+**                    CLEAR lt_target_poitempricingitem.
+*          ENDLOOP.
+*
+*        ENDIF.
+*
+*      ENDLOOP.
+*
+*
+**                  CLEAR lt_target_poitempricingitem.
+*
+*      " DATA: lt_po_header TYPE TABLE FOR CREATE i_purchaseordertp_2\_purchaseorderitem.
+*      MODIFY ENTITIES OF i_purchaseordertp_2 PRIVILEGED
+*          ENTITY purchaseorderitem
+*          CREATE BY \_purordpricingelement FROM lt_update_poitempricingitem
+** CREATE BY \_purordpricingelement FROM lt_update_poitempricingitem
+*          MAPPED DATA(mapped_pe)
+*          FAILED DATA(failed_pe)
+*          REPORTED DATA(reported_pe).
+*
+*
+*    ENDIF.
 
-        IF sy-subrc = 0.
-          DATA: lt_item_pricing_element TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
-
-          DATA: lt_update_data TYPE TABLE OF i_purchaseorderitemtp_2.
-
-          DATA lt_update_poitempricingitem TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
-          DATA ls_update_poitempricingitem LIKE LINE OF lt_update_poitempricingitem.
-
-          DATA lt_target_poitempricingitem LIKE ls_update_poitempricingitem-%target.
-          DATA ls_target_poitempricingitem LIKE LINE OF lt_target_poitempricingitem.
 
 
-
-          LOOP AT afis_val_result INTO DATA(afi_val).
-
-           DATA(unix_tstmp) = xco_cp=>sy->unix_timestamp( )->value.
-
-           " Generate Unique Content ID for each entry
-            DATA(lv_cid) = cl_system_uuid=>create_uuid_c22_static( ).
-
-            "Append header values
-            ls_target_poitempricingitem = VALUE #( %key-purchaseorder            = afi_val-orderpo
-*            ls_update_poitempricingitem = VALUE #( %key-purchaseorder            = afi_val-orderpo
-
-                                                   %key-purchaseorderitem        = afi_val-itemid
-*                                                   %cid                        = |CID{ sy-tabix }|
-*                                          %cid                          =  cl_system_uuid=>create_uuid_c22_static( )
-                                                   %cid                          =  lv_cid
-                                                   conditiontype                 = 'FVA1'
-                                                   conditionrateamount           = afi_val-RcvdAmount
-                                                   conditioncurrency             = afi_val-cukyfield
-                                                   %control = VALUE #( conditiontype                = if_abap_behv=>mk-on
-                                                                       conditionrateamount          = if_abap_behv=>mk-on
-                                                                       conditioncurrency            = if_abap_behv=>mk-on
-                                                                     )
-                                                 ).
-
-                       APPEND ls_target_poitempricingitem TO lt_target_poitempricingitem.
-
-*                       APPEND ls_update_poitempricingitem TO lt_update_poitempricingitem.
-
-                    ls_update_poitempricingitem = VALUE #( %key-purchaseorder = afi_val-orderpo
-                                                              %key-purchaseorderitem = afi_val-itemid
-                                                              %target = lt_target_poitempricingitem ).
-                       APPEND ls_update_poitempricingitem TO lt_update_poitempricingitem.
-
-                    CLEAR ls_target_poitempricingitem.
-                    CLEAR lt_target_poitempricingitem.
-          ENDLOOP.
+*1ST APPROACH
 
 
+*READ ENTITIES OF zr_rfa IN LOCAL MODE
+*               ENTITY af
+*               ALL FIELDS WITH VALUE #( ( %key-faid = keys[ 1 ]-%key-faid ) )
+*               RESULT DATA(afs_val).
+*
+*    IF sy-subrc = 0.
+*      LOOP AT afs_val INTO DATA(af_val).
+*        READ ENTITIES OF zr_rfa IN LOCAL MODE
+*          ENTITY af BY \_fai
+*            ALL FIELDS WITH VALUE #( ( %tky = af_val-%tky ) )
+*          RESULT DATA(afis_val_result).
+*
+*        IF sy-subrc = 0.
+*          DATA: lt_item_pricing_element TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
+*
+*          LOOP AT afis_val_result INTO DATA(afi_val).
+*
+*            MODIFY ENTITIES OF i_purchaseordertp_2 PRIVILEGED
+*               ENTITY purchaseorderitem
+*               CREATE BY \_purordpricingelement SET FIELDS WITH VALUE #(
+*                 ( %key-purchaseorder    = afi_val-orderpo
+*                   %key-purchaseorderitem = afi_val-itemid
+*                   %target = VALUE #( (
+*                     %cid                = |CID{ sy-tabix }|
+*                     conditiontype       = 'FVA1'
+*                     conditionrateamount = afi_val-convalue
+*                     conditioncurrency   = afi_val-cukyfield ) ) ) )
+*               MAPPED DATA(mapped_pe)
+*               FAILED DATA(failed_pe)
+*               REPORTED DATA(reported_pe).
+*
+*               CLEAR mapped_pe.
+*               CLEAR failed_pe.
+*               CLEAR reported_pe.
+*
+*
+*            DATA(test) = `end`.
+*
+*          ENDLOOP.
+*
+*          " DATA: lt_po_header TYPE TABLE FOR CREATE i_purchaseordertp_2\_purchaseorderitem.
+*
+*
+*        ENDIF.
+*
+*      ENDLOOP.
+*    ENDIF.
 
 
-
-        ENDIF.
-
-      ENDLOOP.
+*NEW APPROACH
 
 
-*                  CLEAR lt_target_poitempricingitem.
+   READ ENTITIES OF zr_rfa IN LOCAL MODE
+        ENTITY af
+        ALL FIELDS WITH VALUE #( ( %key-faid = keys[ 1 ]-%key-faid ) )
+        RESULT DATA(afs_val).
 
-          " DATA: lt_po_header TYPE TABLE FOR CREATE i_purchaseordertp_2\_purchaseorderitem.
-          MODIFY ENTITIES OF i_purchaseordertp_2 PRIVILEGED
-              ENTITY purchaseorderitem
-              CREATE BY \_purordpricingelement FROM lt_update_poitempricingitem
-* CREATE BY \_purordpricingelement FROM lt_update_poitempricingitem
-              MAPPED DATA(mapped_pe)
-              FAILED DATA(failed_pe)
-              REPORTED DATA(reported_pe).
-
-
+    IF sy-subrc <> 0.
+        RETURN.
     ENDIF.
+
+    DATA: lt_po_pricing TYPE TABLE FOR CREATE i_purchaseorderitemtp_2\_purordpricingelement.
+
+    LOOP AT afs_val INTO DATA(af_val).
+        READ ENTITIES OF zr_rfa IN LOCAL MODE
+            ENTITY af BY \_fai
+            ALL FIELDS WITH VALUE #( ( %tky = af_val-%tky ) )
+            RESULT DATA(afis_val_result).
+
+        LOOP AT afis_val_result INTO DATA(afi_val).
+
+         " Normalize Item ID format using ALPHA input conversion
+DATA: lv_itemid TYPE char10.  " Adjust length based on actual key length
+
+  " Normalize Item ID format (Remove leading zeros if required)
+*    lv_itemid = condense( AFI_VAL-ItemId ).
+
+
+   " Convert item ID to 5-digit zero-padded format
+    lv_itemid = |{ afi_val-itemid ALPHA = IN }|.
+
+    " Trim to ensure length is 5
+*    lv_itemid = lv_itemid + strlen( lv_itemid )-5(5).
+
+            TRY.
+                DATA(lv_cid) = cl_system_uuid=>create_uuid_c22_static( ).
+            CATCH cx_uuid_error.
+                " Handle UUID error
+                APPEND VALUE #( %msg = new_message(
+                    id       = 'ZPO_MSG'
+                    number   = '001'
+                    severity = if_abap_behv_message=>severity-error
+                ) ) TO reported-afi.
+                CONTINUE.
+            ENDTRY.
+
+            " Validate parent PO item exists
+            READ ENTITIES OF i_purchaseordertp_2 FORWARDING PRIVILEGED
+                ENTITY purchaseorderitem
+                ALL FIELDS WITH VALUE #( (
+                    %key-purchaseorder     = afi_val-orderpo
+                    %key-purchaseorderitem = lv_itemid
+                ) )
+                RESULT DATA(lt_po_items).
+
+*            IF sy-subrc <> 0.
+*                " Parent PO item not found
+*                APPEND VALUE #(
+*                    %key-purchaseorder     = afi_val-orderpo
+*                    %key-purchaseorderitem = afi_val-itemid
+*                    %msg                   = new_message(
+*                        id       = 'ZPO_MSG'
+*                        number   = '003'
+*                        severity = if_abap_behv_message=>severity-error
+*                    )
+*                ) TO reported-afi.
+*                CONTINUE.
+*            ENDIF.
+
+
+
+
+
+            APPEND VALUE #(
+                %key-purchaseorder     = afi_val-orderpo
+                %key-purchaseorderitem = 10
+*                %key-purchaseorderitem = afi_val-itemid
+                %target = VALUE #( (
+                    %cid                = lv_cid
+*                    %is_preliminary    = abap_true
+                    conditiontype       = 'FVA1'
+                    conditionrateamount = afi_val-convalue
+                    conditioncurrency   = afi_val-cukyfield
+                    %control           = VALUE #(
+                        conditiontype       = if_abap_behv=>mk-on
+                        conditionrateamount = if_abap_behv=>mk-on
+                        conditioncurrency   = if_abap_behv=>mk-on
+                    )
+                ) )
+            ) TO lt_po_pricing.
+        ENDLOOP.
+    ENDLOOP.
+
+    IF lt_po_pricing IS NOT INITIAL.
+        MODIFY ENTITIES OF i_purchaseordertp_2 PRIVILEGED
+            ENTITY purchaseorderitem
+            CREATE BY \_purordpricingelement
+            FROM lt_po_pricing
+            MAPPED DATA(mapped_pe)
+            FAILED DATA(failed_pe)
+            REPORTED DATA(reported_pe).
+
+        " Extract mapped pricing elements
+        IF mapped_pe-purorderitempricingelement IS NOT INITIAL.
+            LOOP AT mapped_pe-purorderitempricingelement ASSIGNING FIELD-SYMBOL(<mapped>).
+                " <mapped> contains both %pid and system-generated keys
+                " Example: conditionuuid = <mapped>-ConditionUUID
+            ENDLOOP.
+        ENDIF.
+    ENDIF.
+    DATA(SAMPLE) = '12333'.
+
 
   ENDMETHOD.
 
