@@ -79,6 +79,10 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
                 billingdocument    TYPE i_billingdocument-billingdocument,
                 clearingstatus     TYPE i_billingdocument-invoiceclearingstatus,
                 accountingdocument TYPE i_billingdocument-accountingdocument,
+
+*                ****************** Pallava added 21052025***************
+                billingdoctype    TYPE i_billingdocument-BillingDocumentType,
+
               END OF ty_billingdoc.
 
       DATA: lt_billingdocu TYPE TABLE OF ty_billingdoc,
@@ -159,8 +163,10 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
 
 
 
-      "Query billing document, payment status = fully cleared, posting status = completed
-      SELECT billingdocument,invoiceclearingstatus,accountingdocument
+*      "Query billing document, payment status = fully cleared, posting status = completed
+****************** Pallava added billingdoctype on 21052025***************
+
+      SELECT billingdocument,invoiceclearingstatus,accountingdocument,billingdocumenttype
         FROM i_billingdocument  WITH PRIVILEGED ACCESS
         "WHERE billingdocument BETWEEN '0090000004' AND '0090000011'
        " WHERE billingdocument = '0090000007'
@@ -194,11 +200,20 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
 *              Code added by Pallava on 04042025
 
 *              DATA(amount) = ls_billingdocuitem-amount.
-               amount_f = ls_billingdocuitem-amount.
-               amount = amount_f.
 
-*              Code added by Pallava on 04042025
+******************* Pallava added billingdoctype on 21052025***************
 
+            amount_f = ls_billingdocuitem-amount.
+
+            IF ls_billingdocu-billingdoctype = 'G2' OR ls_billingdocu-billingdoctype = 'S1' OR ls_billingdocu-billingdoctype = 'CBRE'.
+             amount = - amount_f.
+            ELSE.
+            amount = amount_f.
+            ENDIF.
+
+            amount = amount_f.
+
+*            Code added by Pallava on 04042025
 
               "Query customer ID to get customer name
               SELECT SINGLE customername
@@ -339,8 +354,11 @@ CLASS ZCL_SALESCOMM_ADDINVOICE IMPLEMENTATION.
                                        salesorderid = |{ ls_billingdocuitem-salesdocument ALPHA = OUT }|
                                        salesorderdate = sales_order_date  "ls_salesorder-salesorderdate
                                        billingdocumentdate = ls_billingdocuitem-invoicedate
+
+*                                       ******************* Pallava added billingdoctype on 21052025***************
 *                                      amount = ls_billingdocuitem-amount
                                        amount = amount
+
                                        amountcurrencycode = ls_billingdocuitem-amountcurrency
                                        customerid = |{ ls_billingdocuitem-customerid ALPHA = OUT }|
                                        customername = retrievedcustomername

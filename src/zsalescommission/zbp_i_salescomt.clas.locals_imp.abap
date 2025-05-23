@@ -65,6 +65,8 @@ CLASS lhc_salescommission IMPLEMENTATION.
                   billingdocument    TYPE i_billingdocument-billingdocument,
                   clearingstatus     TYPE i_billingdocument-invoiceclearingstatus,
                   accountingdocument TYPE i_billingdocument-accountingdocument,
+*                                  ****************** Pallava added 21052025***************
+                billingdoctype    TYPE i_billingdocument-BillingDocumentType,
                 END OF ty_billingdoc.
 
         DATA: lt_billingdocu TYPE TABLE OF ty_billingdoc,
@@ -131,9 +133,21 @@ CLASS lhc_salescommission IMPLEMENTATION.
         DATA: lt_salesorderitem TYPE TABLE OF ty_salesorderitem,
               ls_salesorderitem TYPE ty_salesorderitem.
 
+******************* Pallava added billingdoctype on 21052025***************
+
+
+      DATA: amount_f          TYPE f.
+      DATA  amount            TYPE p LENGTH 10 DECIMALS 2.
+
+      DATA: unitprice_f       TYPE f.
+      DATA  unitprice         TYPE p LENGTH 10 DECIMALS 2.
+
+*     DATA: commissionamount_f TYPE f.
+*     DATA  commissionamount  TYPE p LENGTH 10 DECIMALS 2.
 
         "Query billing document, payment status = fully cleared, posting status = completed
-        SELECT billingdocument,invoiceclearingstatus,accountingdocument
+*         ****************** Pallava added billingdoctype on 21052025***************
+      SELECT billingdocument,invoiceclearingstatus,accountingdocument,billingdocumenttype
           FROM i_billingdocument  WITH PRIVILEGED ACCESS
          " WHERE billingdocument BETWEEN '0090000004' AND '0090000011'
         "  WHERE billingdocument = '0090000070'
@@ -149,6 +163,8 @@ CLASS lhc_salescommission IMPLEMENTATION.
             netamount, transactioncurrency, salesdocument
             FROM i_billingdocumentitem
             WHERE billingdocument = @ls_billingdocu-billingdocument
+*            WHERE billingdocument = '90000001'
+
             AND
 *           Pallava addded on 21-01-2025
             billingquantity <> 0
@@ -162,7 +178,20 @@ CLASS lhc_salescommission IMPLEMENTATION.
                 DATA(product) = ls_billingdocuitem-product.
                 DATA(salesdocument) = ls_billingdocuitem-salesdocument.
                 DATA(quantity) = ls_billingdocuitem-quantity.
-                DATA(amount) = ls_billingdocuitem-amount.
+
+*                *              Code added by Pallava on 04042025
+
+*              DATA(amount) = ls_billingdocuitem-amount.
+
+******************* Pallava added billingdoctype on 21052025***************
+
+            amount_f = ls_billingdocuitem-amount.
+
+            IF ls_billingdocu-billingdoctype = 'G2' OR ls_billingdocu-billingdoctype = 'S1' OR ls_billingdocu-billingdoctype = 'CBRE'.
+             amount = - amount_f.
+            ELSE.
+            amount = amount_f.
+            ENDIF.
 
                 "Query customer ID and get name customer name
                 SELECT SINGLE customername
@@ -265,7 +294,11 @@ CLASS lhc_salescommission IMPLEMENTATION.
 
                 IF sy-subrc = 0.
                   LOOP AT lt_salesorderitem INTO ls_salesorderitem.
-                    DATA(unitprice) = ls_salesorderitem-unitprice.
+
+******************* Pallava commented on 22052025***************
+*                    DATA(unitprice) = ls_salesorderitem-unitprice.
+                     unitprice = ls_salesorderitem-unitprice.
+
                     DATA(unitpricequantity) =  ls_salesorderitem-unitpricequantity.
                     IF unitpricequantity IS NOT INITIAL OR unitpricequantity <> 0.  "17/01/2025 TO AVOID Runtime Error: 'BCD_ZERODIVIDE'
                       unitprice = unitprice / unitpricequantity.
@@ -302,7 +335,10 @@ CLASS lhc_salescommission IMPLEMENTATION.
                                                salesorderid = |{ ls_billingdocuitem-salesdocument ALPHA = OUT }|
                                                salesorderdate = sales_order_date  "ls_salesorder-salesorderdate
                                                billingdocumentdate = ls_billingdocuitem-invoicedate
-                                               amount = ls_billingdocuitem-amount
+
+*                                               ****************** Pallava added billingdoctype on 21052025***************
+*                                              amount = ls_billingdocuitem-amount
+                                               amount = amount
                                                amountcurrencycode = ls_billingdocuitem-amountcurrency
                                                customerid = |{ ls_billingdocuitem-customerid ALPHA = OUT }|
                                                customername = retrievedcustomername                                               salesorganisation = ls_billingdocuitem-salesorganisation
